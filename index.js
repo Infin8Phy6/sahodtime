@@ -1,6 +1,4 @@
-// Load environment variables
-require('dotenv').config();
-
+// Load required modules
 const express = require('express');
 const mysql = require('mysql2');
 const axios = require('axios');
@@ -22,16 +20,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// Create a connection to the database using .env variables
+// ✅ Hardcoded Database Connection
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
+  host: 'sql12.freemysqlhosting.net',   // Your DB Host
+  user: 'sql12762989',                  // Your DB User
+  password: 'kGgrfBqrn2',               // Your DB Password
+  database: 'sql12762989',               // Your DB Name
+  port: 3306                           // Default MySQL Port
 });
 
-// Connect to the database
+// ✅ Connect to the database
 db.connect((err) => {
   if (err) {
     console.error('Database connection failed:', err.stack);
@@ -40,7 +38,7 @@ db.connect((err) => {
   console.log('Connected to the database.');
 });
 
-// Get total 40% payout for a specific walletaddress
+// ✅ Get total 40% payout for a specific wallet address
 app.post('/getPayableAmount', async (req, res) => {
   const { walletAddress } = req.body; // Get wallet address from request body
 
@@ -49,7 +47,7 @@ app.post('/getPayableAmount', async (req, res) => {
   }
 
   try {
-    // Get all txhash for walletaddress with paymentstatus = 'canpay'
+    // Get all txhash for walletAddress with paymentstatus = 'canpay'
     const query = `
       SELECT txhash 
       FROM afilliateprogram 
@@ -68,7 +66,7 @@ app.post('/getPayableAmount', async (req, res) => {
         const { txhash } = row;
 
         // Get transaction details from Infura
-        const infuraUrl = `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`;
+        const infuraUrl = `https://mainnet.infura.io/v3/05df1a7b1b3c4d4d9b2f223fc88c8e2d`;  // Infura API Key
         const data = {
           jsonrpc: "2.0",
           method: "eth_getTransactionByHash",
@@ -109,7 +107,7 @@ app.post('/getPayableAmount', async (req, res) => {
   }
 });
 
-// Start the server
+// ✅ Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
